@@ -1,0 +1,37 @@
+﻿name: Publish BP Protocol Beta 1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release/v1.0.0-beta.1/**"
+      - ".github/workflows/publish-beta-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0-beta.1
+          name: BP Protocol Beta 1
+          body: |
+            First public beta for BP Protocol desktop.
+
+            Includes the Windows installer, blockmap, and latest.yml for Electron auto-update.
+          draft: false
+          prerelease: true
+          make_latest: true
+          files: |
+            release/v1.0.0-beta.1/BP-Protocol-Beta-v1-Setup-1.0.0-beta.1.exe
+            release/v1.0.0-beta.1/BP-Protocol-Beta-v1-Setup-1.0.0-beta.1.exe.blockmap
+            release/v1.0.0-beta.1/latest.yml
