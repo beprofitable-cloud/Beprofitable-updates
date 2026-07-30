@@ -19,35 +19,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create or update release
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.3-beta
+          name: Beprofitable Beta 1.0.3
+          body: |
+            Beprofitable Beta 1.0.3
+
+            - Removed the app admin mode and related bypass gates.
+            - Re-enabled check-in so Start Trading follows the configured schedule.
+            - Start Trading now opens Trade Control directly; the market-problem scene is hidden.
+            - Loss Protocol timer starts immediately when pressed and returns to the timer page after the loss form is saved.
+            - Added a 5-minute screenshot popout before locking the trading link after green day, max trades, or max daily loss.
+            - If Loss Protocol is active, the 5-minute screenshot window waits until the protocol timer finishes.
+            - Update popouts now show what changed in the new version.
+            - One-time factory reset for this update only so the app opens like a fresh install.
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: |
+            release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe
+            release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe.blockmap
+            release/v1.0.3-beta/latest.yml
+
+      - name: Ensure installer asset is uploaded
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cat > /tmp/release-notes.md <<'NOTES'
-Beprofitable Beta 1.0.3
-
-- Removed the app admin mode and related bypass gates.
-- Re-enabled check-in so Start Trading follows the configured schedule.
-- Start Trading now opens Trade Control directly; the market-problem scene is hidden.
-- Loss Protocol timer starts immediately when pressed and returns to the timer page after the loss form is saved.
-- Added a 5-minute screenshot popout before locking the trading link after green day, max trades, or max daily loss.
-- If Loss Protocol is active, the 5-minute screenshot window waits until the protocol timer finishes.
-- Update popouts now show what changed in the new version.
-- One-time factory reset for this update only so the app opens like a fresh install.
-NOTES
-          if gh release view v1.0.3-beta >/dev/null 2>&1; then
-            gh release upload v1.0.3-beta \
-              release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe \
-              release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe.blockmap \
-              release/v1.0.3-beta/latest.yml \
-              --clobber
-            gh release edit v1.0.3-beta --title "Beprofitable Beta 1.0.3" --notes-file /tmp/release-notes.md --latest
-          else
-            gh release create v1.0.3-beta \
-              release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe \
-              release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe.blockmap \
-              release/v1.0.3-beta/latest.yml \
-              --title "Beprofitable Beta 1.0.3" \
-              --notes-file /tmp/release-notes.md \
-              --latest
-          fi
+          gh release upload v1.0.3-beta release/v1.0.3-beta/Beprofitable-Beta-Setup-1.0.3-beta.exe --clobber
