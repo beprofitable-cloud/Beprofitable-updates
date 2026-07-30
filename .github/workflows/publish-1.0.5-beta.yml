@@ -1,0 +1,47 @@
+﻿name: Publish Beprofitable 1.0.5 Beta
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release/v1.0.5-beta/**"
+      - ".github/workflows/publish-1.0.5-beta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.5-beta
+          name: Beprofitable Beta 1.0.5
+          body: |
+            Beprofitable Beta 1.0.5
+
+            - Added a Session option to disable check-in completely.
+            - When check-in is disabled, missed check-in no longer blocks the day.
+            - If the trading session is active, the trading link unlocks by schedule immediately after disabling check-in.
+            - Dashboard and settings now show when check-in is disabled.
+            - This update does not reset or delete user data.
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: |
+            release/v1.0.5-beta/Beprofitable-Beta-Setup-1.0.5-beta.exe
+            release/v1.0.5-beta/Beprofitable-Beta-Setup-1.0.5-beta.exe.blockmap
+            release/v1.0.5-beta/latest.yml
+
+      - name: Ensure installer asset is uploaded
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.5-beta release/v1.0.5-beta/Beprofitable-Beta-Setup-1.0.5-beta.exe --clobber
