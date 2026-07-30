@@ -1,0 +1,41 @@
+﻿name: Publish Beprofitable 1.0.2 Beta
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release/v1.0.2-beta/**"
+      - ".github/workflows/publish-1.0.2-beta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.0.2-beta >/dev/null 2>&1; then
+            gh release upload v1.0.2-beta \
+              release/v1.0.2-beta/Beprofitable-Beta-Setup-1.0.2-beta.exe \
+              release/v1.0.2-beta/Beprofitable-Beta-Setup-1.0.2-beta.exe.blockmap \
+              release/v1.0.2-beta/latest.yml \
+              --clobber
+            gh release edit v1.0.2-beta --title "Beprofitable Beta 1.0.2" --notes "Beprofitable Beta 1.0.2 protects user data during updates. Config, journal, habits, and backups are preserved; production fresh-user resets are blocked; installer AppData deletion is disabled." --latest
+          else
+            gh release create v1.0.2-beta \
+              release/v1.0.2-beta/Beprofitable-Beta-Setup-1.0.2-beta.exe \
+              release/v1.0.2-beta/Beprofitable-Beta-Setup-1.0.2-beta.exe.blockmap \
+              release/v1.0.2-beta/latest.yml \
+              --title "Beprofitable Beta 1.0.2" \
+              --notes "Beprofitable Beta 1.0.2 protects user data during updates. Config, journal, habits, and backups are preserved; production fresh-user resets are blocked; installer AppData deletion is disabled." \
+              --latest
+          fi
