@@ -1,0 +1,25 @@
+﻿name: Upload Beprofitable 1.0.1 EXE
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/upload-1.0.1-exe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  upload-exe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload installer asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.1-beta release/v1.0.1-beta/Beprofitable-Beta-Setup-1.0.1-beta.exe --clobber
