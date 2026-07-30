@@ -29,7 +29,7 @@ jobs:
 
             Includes the update popout behavior, Settings updates page, clean profile updates removal, calendar fixes, and latest beta polish.
           draft: false
-          prerelease: true
+          prerelease: false
           make_latest: true
           files: |
             release/v1.0.1-beta/Beprofitable-Beta-Setup-1.0.1-beta.exe
