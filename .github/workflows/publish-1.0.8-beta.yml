@@ -1,0 +1,46 @@
+﻿name: Publish Beprofitable 1.0.8 Beta
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release/v1.0.8-beta/**"
+      - ".github/workflows/publish-1.0.8-beta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.8-beta
+          name: Beprofitable Beta 1.0.8
+          body: |
+            Beprofitable Beta 1.0.8
+
+            - Trading Session now scales visually on larger monitors instead of leaving fixed-size modules floating inside a bigger screen.
+            - The status strip, Loss Protocol button, confluence cards, checklist, calculator, psychology rules, and bottom action buttons now grow together with controlled limits.
+            - Short-height screens keep the compact layout to avoid scroll and overlap.
+            - This update does not reset or delete user data.
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: |
+            release/v1.0.8-beta/Beprofitable-Beta-Setup-1.0.8-beta.exe
+            release/v1.0.8-beta/Beprofitable-Beta-Setup-1.0.8-beta.exe.blockmap
+            release/v1.0.8-beta/latest.yml
+
+      - name: Ensure installer asset is uploaded
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.8-beta release/v1.0.8-beta/Beprofitable-Beta-Setup-1.0.8-beta.exe --clobber
