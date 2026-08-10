@@ -1,0 +1,49 @@
+﻿name: Publish Beprofitable 1.0.7 Beta
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release/v1.0.7-beta/**"
+      - ".github/workflows/publish-1.0.7-beta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.7-beta
+          name: Beprofitable Beta 1.0.7
+          body: |
+            Beprofitable Beta 1.0.7
+
+            - Check-in and server access now unlock together 1 hour before each selected session.
+            - The server no longer stays locked during the valid check-in window.
+            - Dashboard countdown now targets the next valid session window.
+            - Settings and onboarding now explain that this applies to each selected session.
+            - This update does not reset or delete user data.
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: |
+            release/v1.0.7-beta/Beprofitable-Beta-Setup-1.0.7-beta.exe
+            release/v1.0.7-beta/Beprofitable-Beta-Setup-1.0.7-beta.exe.blockmap
+            release/v1.0.7-beta/latest.yml
+
+      - name: Ensure installer asset is uploaded
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.7-beta release/v1.0.7-beta/Beprofitable-Beta-Setup-1.0.7-beta.exe --clobber
+
+
